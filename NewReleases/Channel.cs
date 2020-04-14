@@ -20,10 +20,10 @@ namespace NewReleases
 {
     public class Channel : IChannel, IHasCacheKey, IRequiresMediaInfoCallback
     {
-        private IHttpClient HttpClient         { get; set; }
-        private ILogger Logger                 { get; set; }
-        private IJsonSerializer JsonSerializer { get; set; }
-        private ILibraryManager LibraryManager { get; set; }
+        private IHttpClient HttpClient         { get; }
+        private ILogger Logger                 { get; }
+        private IJsonSerializer JsonSerializer { get; }
+        private ILibraryManager LibraryManager { get; }
 
         public Channel(IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer, ILibraryManager lib)
         {
@@ -50,9 +50,10 @@ namespace NewReleases
                 },
 
                 SupportsContentDownloading = true,
+                SupportsSortOrderToggle    = true,
             };
         }
-
+        
         private Task<ChannelItemResult> GetChannelItemsInternal()
         {
             Plugin.Instance.UpdateConfiguration(Plugin.Instance.Configuration);
@@ -73,15 +74,8 @@ namespace NewReleases
                 ParentIds = new[] {channel[0].InternalId}
             }).ToList();
 
-            var sortedList = new List<long>();
-
-            foreach (var i in ids)
-            {
-                if (!libraryItems.Exists(id => id == i))
-                {
-                    sortedList.Add(i);
-                }
-            }
+            // ReSharper disable once ComplexConditionExpression
+            var sortedList = ids.Where(i => !libraryItems.Exists(id => id == i)).ToList();
 
             var items = sortedList.Select(id => LibraryManager.GetItemById(id))
                 .Select(movie => new ChannelItemInfo
@@ -136,7 +130,7 @@ namespace NewReleases
 
         public IEnumerable<ImageType> GetSupportedChannelImages()
         {
-            return new List<ImageType>() { ImageType.Primary };
+            return new List<ImageType>() { ImageType.Primary, ImageType.Thumb };
         }
 
         public string Name => "New Releases";

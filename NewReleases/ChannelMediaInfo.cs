@@ -56,18 +56,17 @@ namespace NewReleases
 
             var source = new MediaSourceInfo
             {
-                MediaStreams = GetMediaStreams(this).ToList(),
-
-                Container = Container,
-                Protocol = Protocol,
-                Path = Path,
-                RequiredHttpHeaders = RequiredHttpHeaders,
-                RunTimeTicks = RunTimeTicks,
-                Name = id,
-                Id = id,
+                MediaStreams         = GetMediaStreams(this).ToList(),
+                Container            = Container,
+                Protocol             = Protocol,
+                Path                 = Path,
+                RequiredHttpHeaders  = RequiredHttpHeaders,
+                RunTimeTicks         = RunTimeTicks,
+                Name                 = id,
+                Id                   = id,
                 SupportsDirectStream = Protocol == MediaProtocol.Http && !string.IsNullOrWhiteSpace(Container) && !string.Equals(Container, "hls", StringComparison.OrdinalIgnoreCase),
-                SupportsDirectPlay = SupportsDirectPlay,
-                IsRemote = true
+                SupportsDirectPlay   = SupportsDirectPlay,
+                IsRemote             = true
             };
 
             source.InferTotalBitrate();

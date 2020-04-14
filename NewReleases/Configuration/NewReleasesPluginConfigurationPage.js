@@ -17,29 +17,75 @@
                         if (config.MinPremiereDate) {
                             view.querySelector('#txtMinDateOffSet').value = config.MinPremiereDate;
                         }
+                        if (config.IncrementMonths) {
+                            view.querySelector('#enableMonthlyIncrements').checked = config.IncrementMonths;
+                        } else {
+                            view.querySelector('#enableMonthlyIncrements').checked = false;
+                        }
+
+                        if (config.IncrementDays) {
+                            view.querySelector('#enableDailyIncrements').checked = config.IncrementDays;
+                        } else {
+                            view.querySelector('#enableDailyIncrements').checked = false;
+                        }
+
                     });
 
+                    view.querySelector('#enableMonthlyIncrements').addEventListener('change',
+                        () => {
+
+                            if (view.querySelector('#enableMonthlyIncrements').checked === true) {
+                                view.querySelector('#enableDailyIncrements').checked = false;
+                            } 
+
+                            ApiClient.getPluginConfiguration(pluginId).then((config) => {
+                                config.IncrementMonths = view.querySelector('#enableMonthlyIncrements').checked;
+                                config.IncrementMonths = view.querySelector('#enableDailyIncrements').checked;
+                                ApiClient.updatePluginConfiguration(pluginId, config).then(result => {
+                                    Dashboard.processPluginConfigurationUpdateResult(result);
+                                });
+                            });
+                        });
+
+                    view.querySelector('#enableDailyIncrements').addEventListener('change',
+                        () => {
+
+                            if (view.querySelector('#enableDailyIncrements').checked === true) {
+                                view.querySelector('#enableMonthlyIncrements').checked = false;
+                            }
+
+                            ApiClient.getPluginConfiguration(pluginId).then((config) => {
+                                config.IncrementMonths = view.querySelector('#enableMonthlyIncrements').checked;
+                                config.IncrementMonths = view.querySelector('#enableDailyIncrements').checked;
+                                ApiClient.updatePluginConfiguration(pluginId, config).then(result => {
+                                    Dashboard.processPluginConfigurationUpdateResult(result);
+                                });
+                            });
+                        });
+
+                    var minPremiereDateTargetValue;
                     view.querySelector('#txtMinDateOffSet').addEventListener('change', (e) => {
-                        ApiClient.getPluginConfiguration(pluginId).then((config) => {
-                            config.MinPremiereDate = e.target.value;
-                            ApiClient.updatePluginConfiguration(pluginId, config).then(
-                                (result) => {
+                        minPremiereDateTargetValue = e.target.value;
+                    });
 
-                                    ApiClient.getJSON(ApiClient.getUrl("ScheduledTasks")).then(tasks => {
-                                        tasks.forEach(task => {
-                                            if (task.Name === "Refresh Internet Channels") {
-
-                                                ApiClient.refreshInternetChannels(task.Id);
-                                                Dashboard.processPluginConfigurationUpdateResult(result);
-
-                                            }
+                    view.querySelector('#saveData').addEventListener('click',
+                        () => {
+                            ApiClient.getPluginConfiguration(pluginId).then((config) => {
+                                config.MinPremiereDate = minPremiereDateTargetValue;
+                                ApiClient.updatePluginConfiguration(pluginId, config).then(
+                                    (result) => {
+                                        ApiClient.getJSON(ApiClient.getUrl("ScheduledTasks")).then(tasks => {
+                                            tasks.forEach(task => {
+                                                if (task.Name === "Refresh Internet Channels") {
+                                                    ApiClient.refreshInternetChannels(task.Id);
+                                                    Dashboard.processPluginConfigurationUpdateResult(result);
+                                                }
+                                            });
                                         });
                                     });
-
-                                    
-                                });
+                            });
                         });
-                    });
+
                 });
         }
     });

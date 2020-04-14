@@ -10,6 +10,39 @@
                     <input type="date" id="txtMinDateOffSet" label="New Release Minimum Date:" value="" min="2018-01-01" class="emby-input">
                     <div class="fieldDescription">The minimum release date Emby should consider to be a new release.</div>
                 </div>
+                
+                <div class="inputContainer" style="text-align: left;">
+                    <label style="width: auto;" class="mdl-switch mdl-js-switch">
+                        <input is="emby-toggle" type="checkbox" id="enableMonthlyIncrements" class="chkAdvanced noautofocus mdl-switch__input" data-embytoggle="true">
+                        <span class="toggleButtonLabel mdl-switch__label">Enable monthly incremented minimum premiere date</span>
+                        <div class="mdl-switch__trackContainer">
+                            <div class="mdl-switch__track"></div>
+                            <div class="mdl-switch__thumb">
+                                <span class="mdl-switch__focus-helper"></span>
+                            </div>
+                        </div>
+                    </label>
+                    <div class="fieldDescription">Increment the minimum monthly premiere date every 29 days.</div>
+                </div>
+                
+                <div class="inputContainer" style="text-align: left;">
+                    <label style="width: auto;" class="mdl-switch mdl-js-switch">
+                        <input is="emby-toggle" type="checkbox" id="enableDailyIncrements" class="chkAdvanced noautofocus mdl-switch__input" data-embytoggle="true">
+                        <span class="toggleButtonLabel mdl-switch__label">Enable daily incremented of minimum premiere date</span>
+                        <div class="mdl-switch__trackContainer">
+                            <div class="mdl-switch__track"></div>
+                            <div class="mdl-switch__thumb">
+                                <span class="mdl-switch__focus-helper"></span>
+                            </div>
+                        </div>
+                    </label>
+                    <div class="fieldDescription">Increment the minimum premiere date daily.</div>
+                </div>
+                
+                
+
+                
+                <button is="emby-button" class="raised button-submit block emby-button" id="saveData">save and update new releases</button>
 
             </form>
         </div>
